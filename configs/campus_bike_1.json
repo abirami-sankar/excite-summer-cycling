@@ -1,0 +1,32 @@
+{
+  "power": {
+    "box": [155, 900, 320, 980],
+    "type": "unit_value",
+    "psm": 8
+  },
+  "current_distance": {
+    "box": [705, 1010, 822, 1048],
+    "type": "unit_value"
+  },
+  "remaining_distance": {
+    "box": [845, 1010, 968, 1048],
+    "type": "unit_value"
+  },
+  "current_elevation": {
+    "box": [1032, 1010, 1090, 1048],
+    "type": "unit_value"
+  },
+  "max_elevation": {
+    "box": [1138, 1010, 1188, 1048],
+    "type": "unit_value"
+  },
+  "gradient": {
+    "box": [1660, 1008, 1770, 1048],
+    "type": "float",
+    "psm": 11
+  },
+  "partner_gap": {
+    "box": [368, 84, 424, 110],
+    "type": "int"
+  }
+}

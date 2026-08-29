@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+output/
+run.jsonl
+*.jsonl
+
+# Large source media — present locally, NOT pushed (GitHub's 100 MB/file limit;
+# these are up to 1.2 GB). Get them from the shared drive / archived original
+# and drop into data/training/.  (data/training/README.md IS tracked.)
+data/training/*.mp4
+data/training/*.mov
+
+# stray local screen-recordings dropped at the repo root
+/*.mp4
+/*.mov

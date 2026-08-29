@@ -1,0 +1,36 @@
+{
+  "riders": {
+    "box": [0, 50, 300, 550],
+    "type": "str"
+  },
+  "speed": {
+    "box": [35, 1000, 105, 1040],
+    "type": "float"
+  },
+  "rpm": {
+    "box": [240, 1000, 350, 1039],
+    "type": "int"
+  },
+  "power": {
+    "box": [80, 850, 205, 950],
+    "type": "unit_value",
+    "psm": 8
+  },
+  "current_distance": {
+    "box": [700, 1000, 825, 1050],
+    "type": "unit_value"
+  },
+  "remaining_distance": {
+    "box": [860, 1026, 975, 1050],
+    "type": "unit_value"
+  },
+  "current_elevation": {
+    "box": [1000, 1010, 1060, 1060],
+    "type": "unit_value",
+    "threshold": 190
+  },
+  "max_elevation": {
+    "box": [1090, 1000, 1150, 1060],
+    "type": "unit_value"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "speed":              {"box": [70, 1342, 152, 1400], "type": "float"},
+  "rpm":                {"box": [345, 1350, 410, 1392], "type": "int"},
+  "power":              {"box": [155, 1188, 295, 1258], "type": "unit_value", "psm": 8},
+  "current_distance":   {"box": [1038, 1376, 1132, 1414], "type": "unit_value"},
+  "remaining_distance": {"box": [1135, 1376, 1248, 1414], "type": "unit_value"},
+  "current_elevation":  {"box": [1368, 1376, 1428, 1414], "type": "unit_value"},
+  "max_elevation":      {"box": [1495, 1376, 1568, 1414], "type": "unit_value"}
+}

@@ -1,0 +1,127 @@
+{
+  "_README": [
+    "Hand-entered expected values for verify_stream.py's check-2, eyeballed",
+    "frame by frame off data/training/trimmed-video.mp4. The route-sum invariant",
+    "(check-1) already covers current+remaining distance for free; this file",
+    "exists to cover the fields that invariant CAN'T check: speed, rpm,",
+    "power, and the two elevations.",
+    "",
+    "Sampling spans the whole clip (fps=1, 0..58s) instead of the template's",
+    "first 5s, because the first few seconds are near-static -- a spread of",
+    "timestamps exercises real variation in every field. Only the 6 frames",
+    "actually verified by eye are filled in; every other stream frame has no",
+    "entry here and is reported SKIP by check-2 (still checked by check-1).",
+    "",
+    "unit_value fields (power/distance/elevation) are written as PLAIN",
+    "NUMBERS, not [num, unit] pairs, on purpose: verify_stream only compares",
+    "the unit when the EXPECTED value carries one, and these units are",
+    "cosmetic constants that OCR reads unreliably (esp. power's 'W', which",
+    "psm-8 single-word mode drops -- see CLAUDE.md bug #4). The NUMBER is the",
+    "meaningful value; unit PARSING is still covered by test_hud_reader.py's",
+    "static-crop tests, where the units read cleanly. riders is left null --",
+    "it's the deferred left-panel feature.",
+    "",
+    "Regenerate the matching stream with:",
+    "  python stream_hud.py --video data/training/trimmed-video.mp4 --start-time 0 \\",
+    "      --end-time 59 --fps 1 --out run.jsonl",
+    "  python verify_stream.py --stream run.jsonl --total 14.06 \\",
+    "      --expected expected.json"
+  ],
+  "video": "data/training/trimmed-video.mp4",
+  "config": "hud_config.json",
+  "sampling": {
+    "start_time": 0.0,
+    "end_time": 59.0,
+    "fps": 1.0
+  },
+  "region_types": {
+    "riders": "str",
+    "speed": "float",
+    "rpm": "int",
+    "power": "unit_value",
+    "current_distance": "unit_value",
+    "remaining_distance": "unit_value",
+    "current_elevation": "unit_value",
+    "max_elevation": "unit_value"
+  },
+  "frames": [
+    {
+      "t": 1.0,
+      "readings": {
+        "riders": null,
+        "speed": 26.7,
+        "rpm": 0,
+        "power": 0,
+        "current_distance": 5.65,
+        "remaining_distance": 8.41,
+        "current_elevation": 29,
+        "max_elevation": 98
+      }
+    },
+    {
+      "t": 12.0,
+      "readings": {
+        "riders": null,
+        "speed": 28.8,
+        "rpm": 42,
+        "power": 70,
+        "current_distance": 5.74,
+        "remaining_distance": 8.33,
+        "current_elevation": 29,
+        "max_elevation": 98
+      }
+    },
+    {
+      "t": 24.0,
+      "readings": {
+        "riders": null,
+        "speed": 18.9,
+        "rpm": 37,
+        "power": 93,
+        "current_distance": 5.81,
+        "remaining_distance": 8.25,
+        "current_elevation": 31,
+        "max_elevation": 96
+      }
+    },
+    {
+      "t": 36.0,
+      "readings": {
+        "riders": null,
+        "speed": 12.9,
+        "rpm": 43,
+        "power": 107,
+        "current_distance": 5.86,
+        "remaining_distance": 8.20,
+        "current_elevation": 32,
+        "max_elevation": 95
+      }
+    },
+    {
+      "t": 48.0,
+      "readings": {
+        "riders": null,
+        "speed": 12.5,
+        "rpm": 44,
+        "power": 98,
+        "current_distance": 5.91,
+        "remaining_distance": 8.16,
+        "current_elevation": 34,
+        "max_elevation": 93
+      }
+    },
+    {
+      "t": 58.0,
+      "readings": {
+        "riders": null,
+        "speed": 0.0,
+        "rpm": 0,
+        "power": 0,
+        "current_distance": 5.93,
+        "remaining_distance": 8.14,
+        "current_elevation": 34,
+        "max_elevation": 93
+      }
+    }
+  ]
+}

@@ -1,0 +1,162 @@
+{
+  "_README": [
+    "Expected-values template for verifying stream_hud.py output.",
+    "Fill in each frame's expected readings by watching the video at that t (seconds).",
+    "Value shapes by region type (see hud_config.json):",
+    "  int   -> number            e.g. 36",
+    "  float -> number            e.g. 27.8",
+    "  str   -> string            e.g. \"L3\"",
+    "  unit_value -> [num, unit]  e.g. [74, \"W\"]  (power/distance/elevation)",
+    "Set a region to null (or delete the key) to SKIP checking it on that frame.",
+    "Timestamps must match a stream_hud run with the sampling below -- regenerate if you change start/end/fps."
+  ],
+  "video": "data/training/trimmed-video.mp4",
+  "config": "hud_config.json",
+  "sampling": {
+    "start_time": 0.0,
+    "end_time": 5.0,
+    "fps": 2.0
+  },
+  "region_types": {
+    "riders": "str",
+    "speed": "float",
+    "rpm": "int",
+    "power": "unit_value",
+    "current_distance": "unit_value",
+    "remaining_distance": "unit_value",
+    "current_elevation": "unit_value",
+    "max_elevation": "unit_value"
+  },
+  "frames": [
+    {
+      "t": 0.0,
+      "readings": {
+        "riders": null,
+        "speed": null,
+        "rpm": null,
+        "power": null,
+        "current_distance": null,
+        "remaining_distance": null,
+        "current_elevation": null,
+        "max_elevation": null
+      }
+    },
+    {
+      "t": 0.5,
+      "readings": {
+        "riders": null,
+        "speed": null,
+        "rpm": null,
+        "power": null,
+        "current_distance": null,
+        "remaining_distance": null,
+        "current_elevation": null,
+        "max_elevation": null
+      }
+    },
+    {
+      "t": 1.0,
+      "readings": {
+        "riders": null,
+        "speed": null,
+        "rpm": null,
+        "power": null,
+        "current_distance": null,
+        "remaining_distance": null,
+        "current_elevation": null,
+        "max_elevation": null
+      }
+    },
+    {
+      "t": 1.5,
+      "readings": {
+        "riders": null,
+        "speed": null,
+        "rpm": null,
+        "power": null,
+        "current_distance": null,
+        "remaining_distance": null,
+        "current_elevation": null,
+        "max_elevation": null
+      }
+    },
+    {
+      "t": 2.0,
+      "readings": {
+        "riders": null,
+        "speed": null,
+        "rpm": null,
+        "power": null,
+        "current_distance": null,
+        "remaining_distance": null,
+        "current_elevation": null,
+        "max_elevation": null
+      }
+    },
+    {
+      "t": 2.5,
+      "readings": {
+        "riders": null,
+        "speed": null,
+        "rpm": null,
+        "power": null,
+        "current_distance": null,
+        "remaining_distance": null,
+        "current_elevation": null,
+        "max_elevation": null
+      }
+    },
+    {
+      "t": 3.0,
+      "readings": {
+        "riders": null,
+        "speed": null,
+        "rpm": null,
+        "power": null,
+        "current_distance": null,
+        "remaining_distance": null,
+        "current_elevation": null,
+        "max_elevation": null
+      }
+    },
+    {
+      "t": 3.5,
+      "readings": {
+        "riders": null,
+        "speed": null,
+        "rpm": null,
+        "power": null,
+        "current_distance": null,
+        "remaining_distance": null,
+        "current_elevation": null,
+        "max_elevation": null
+      }
+    },
+    {
+      "t": 4.0,
+      "readings": {
+        "riders": null,
+        "speed": null,
+        "rpm": null,
+        "power": null,
+        "current_distance": null,
+        "remaining_distance": null,
+        "current_elevation": null,
+        "max_elevation": null
+      }
+    },
+    {
+      "t": 4.5,
+      "readings": {
+        "riders": null,
+        "speed": null,
+        "rpm": null,
+        "power": null,
+        "current_distance": null,
+        "remaining_distance": null,
+        "current_elevation": null,
+        "max_elevation": null
+      }
+    }
+  ]
+}
