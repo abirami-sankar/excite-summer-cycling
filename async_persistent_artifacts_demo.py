@@ -5,11 +5,18 @@ LATER rider to find.
 
 While riding you press a gamepad button (the bike's own ABXY don't reach the PC,
 so we use the borrowed Xbox pad):
-    A (button 0) -> RECORD a short voice memory, pinned to your current spot
-    1/2/3 buttons -> drop a preset "trinket" (Paws plushie / NU poster / shout-out)
+    A (button 0)        -> RECORD a short voice memory, pinned to your current spot
+    buttons 1/2/3 (B/X/Y on an Xbox pad, unconfirmed -- check with probe_input.py)
+                        -> drop a preset "trinket" (Paws plushie / NU poster / shout-out)
+    ESC (global)        -> quit (waits for any clip still recording to finish)
 Each is stored, pinned to the route position, and SURVIVES the session (that's
 the "persistent" + "async" part). A later ride HEARS/finds them on pass-by via
     python route_artifacts_poc/demo_audio_memories.py --store <same store>
+
+With --live it tracks the Rouvy screen state (PRERIDE / RIDING / PAUSED / IDLE,
+same OCR state machine as the audio tour) and only accepts presses while
+RIDING. A red "RECORDING Ns" countdown is drawn over Rouvy while a clip records,
+and extra record presses are ignored until it ends (--no-overlay to hide it).
 
 This is a thin launcher for route_artifacts_poc/demo_leave_message.py (the
 "leave" engine) so it has an obvious top-level name for the rig. Gamepad events
