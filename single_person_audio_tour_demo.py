@@ -10,10 +10,10 @@ OCR of distinctive on-screen text (calibrated live) plus the live distance read:
 
   PRERIDE  -- "Start over or resume ride?" dialog up  -> "TOUR READY TO BEGIN"
   RIDING   -- on the route (distance HUD present)     -> "COMPANION TOUR ACTIVE",
-              welcome ONCE, then landmark alerts; Emma fires at ~87 m and while
-              her bubble is up NOTHING else shows
+              welcome ONCE, then the distance-triggered beats; Emma fires at
+              ~87 m
   PAUSED   -- the pause menu's "CONTINUE RIDE" button is up (NOT just 0 W --
-              Rouvy inertia keeps rolling) -> "PAUSED", alerts frozen
+              Rouvy inertia keeps rolling) -> "PAUSED"
   IDLE     -- Rouvy's main screen / anything else -> overlay fully blank
               (fixes: main screen used to still say "tour active")
 
@@ -22,8 +22,8 @@ sum to ~TOTAL_M (1344 m). A frame that fails is ignored, so a current-distance
 misread (e.g. 33 read as 88) can't false-fire Emma. RIDING is itself detected
 by that invariant holding, so the main screen (no ride HUD) falls to IDLE.
 
-Alerts: "Landmark ahead: Ruggles" periodically for the first 500 m, then a
-sporadic "Photo spot".
+Stripped for the eye-tracking study: the random "Photo spot" pop-up alerts are
+removed, so every on-screen element is tied to a fixed route position.
 
 Audio (audio_bed): 4 background loops layer + fade at random as a QUIET bed all
 ride; a "Ruggles approaching" clip plays at 400 m (banner -> "Landmark ahead:
@@ -185,7 +185,6 @@ def main():
         bed.stop_all(fade_ms=400)
         st.update(emma_fired=False, emma_clear_at=None,
                   welcome_done=False, welcome_until=None,
-                  alert_showing=False, alert_until=0.0, next_alert_at=0.0, gap=0.0,
                   ruggles_approach_fired=False, ruggles_unlock_fired=False,
                   ruggles_banner_active=False,
                   curry_started=False, curry_done=False, curry_active=False,
@@ -257,8 +256,7 @@ def main():
                     if not st["ruggles_unlock_fired"] and last_pos >= RUGGLES_UNLOCK_M:
                         bed.play("ruggles", RUGGLES_UNLOCKED, fade_ms=300)
                         ov.clear_transient()
-                        st.update(ruggles_unlock_fired=True, ruggles_banner_active=False,
-                                  alert_showing=False, next_alert_at=now)
+                        st.update(ruggles_unlock_fired=True, ruggles_banner_active=False)
                         print(">>> Ruggles unlocked (500 m)", flush=True)
                     if not st["curry_started"] and last_pos >= CURRY_IN_M:
                         bed.play("curry", CURRY_MUSIC, loop=True,
@@ -271,8 +269,7 @@ def main():
                             and last_pos >= CURRY_OUT_M):
                         bed.stop("curry", fade_ms=CURRY_FADE_MS)
                         ov.clear_transient()
-                        st.update(curry_done=True, curry_active=False,
-                                  alert_showing=False, next_alert_at=now)
+                        st.update(curry_done=True, curry_active=False)
                         print(">>> Curry / arcade music OUT (720 m)", flush=True)
 
                     # RETRIGGER (opt-in): once the rider drops clearly BELOW a
@@ -327,37 +324,22 @@ def main():
                         bg_stop()
                     else:  # RIDING
                         ov.set_status("COMPANION TOUR ACTIVE")
-                        st.update(alert_showing=False, next_alert_at=now)
                         if not st["bg_on"]:
                             bg_start()
                     print(f"state -> {state}", flush=True)
 
-            # --- RIDING behaviours: welcome once, then the ambient "Photo spot"
-            # alert. Emma AND the Ruggles banner are EXCLUSIVE: while either owns
-            # the screen, the ambient alert is suppressed so nothing overwrites it.
-            if state == "RIDING":
-                exclusive = (st["emma_clear_at"] is not None or st["ruggles_banner_active"]
-                             or st["curry_active"])
-                if not st["welcome_done"]:
-                    if st["welcome_until"] is None:
-                        ov.clear_transient(); ov.show_banner(WELCOME)
-                        st["welcome_until"] = now + args.welcome_secs
-                    elif now >= st["welcome_until"]:
-                        st.update(welcome_done=True, next_alert_at=now)
-                        ov.clear_transient()
-                elif not exclusive:
-                    if st["alert_showing"]:
-                        if now >= st["alert_until"]:
-                            ov.clear_transient()
-                            st.update(alert_showing=False, next_alert_at=now + st["gap"])
-                    elif now >= st["next_alert_at"] and last_pos is not None:
-                        ov.show_sign("Photo spot", 0.30, 0.55)
-                        st.update(alert_showing=True, alert_until=now + 4.0,
-                                  gap=random.uniform(10.0, 20.0))
+            # --- RIDING behaviours: welcome banner once per ride ---
+            if state == "RIDING" and not st["welcome_done"]:
+                if st["welcome_until"] is None:
+                    ov.clear_transient(); ov.show_banner(WELCOME)
+                    st["welcome_until"] = now + args.welcome_secs
+                elif now >= st["welcome_until"]:
+                    st["welcome_done"] = True
+                    ov.clear_transient()
 
             if st["emma_clear_at"] and now >= st["emma_clear_at"]:
                 ov.clear_bubble()
-                st.update(emma_clear_at=None, alert_showing=False, next_alert_at=now)
+                st["emma_clear_at"] = None
 
             ov.update()
             time.sleep(0.02)
