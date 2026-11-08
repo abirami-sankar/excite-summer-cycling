@@ -89,11 +89,11 @@ phasing:
   (fire-once-on-crossing via a high-water mark, so a backwards OCR flicker
   never re-fires or skips). Position comes in as plain km numbers, so it's
   pure/unit-testable — same boundary as `hud_reader`.
-- **`demo_artifacts.py`** — terminal walkthrough driven by REAL OCR output:
+- **`archive/demo_artifacts.py`** *(archived; not used by the live rig)* — terminal walkthrough driven by REAL OCR output:
   reads `current_distance` from a `stream_hud` JSONL (`run.jsonl`) as the
   rider's position, and simulates 3 sessions (Alice → Bob → Carol) sharing one
   store file to demonstrate cross-session persistence.
-- **`demo_artifacts_video.py`** — renders a showable ~20s clip
+- **`archive/demo_artifacts_video.py`** *(archived)* — renders a showable ~20s clip
   (`output/demo_artifacts.mp4`): plays the real footage, OCRs the position
   live, and pops a discovery card as the rider reaches each artifact a
   previous rider left. Sped up (default 3×) so all discoveries fit in ~20s.
@@ -134,6 +134,10 @@ them server-side so OTHER riders (and later sessions) see them.
   infrastructure beyond the current OCR-only repo.
 
 ## 6. Open questions / decisions
+
+> For the eye-tracking study's audio-message build (on-screen visual during
+> playback; free vs prompted recording), see
+> [gaze-study-audio-messages.md](gaze-study-audio-messages.md).
 
 **Artifacts**
 1. **Artifact type** — text, audio, and/or photo? (Affects storage, moderation,

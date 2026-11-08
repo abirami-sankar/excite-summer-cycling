@@ -19,8 +19,11 @@ discoveries into ~20s. Output frames are written at the source fps; speed-up
 is done by sampling every Nth source frame.
 
 Usage (run from anywhere):
-    python route_artifacts_poc/demo_artifacts_video.py           # -> output/demo_artifacts.mp4
-    python route_artifacts_poc/demo_artifacts_video.py --speed 3 --out output/demo_artifacts.mp4
+    python route_artifacts_poc/archive/demo_artifacts_video.py           # -> output/demo_artifacts.mp4
+    python route_artifacts_poc/archive/demo_artifacts_video.py --speed 3 --out output/demo_artifacts.mp4
+
+ARCHIVED: an offline check-in video for the brookline-north route; not used by
+the live rig. Kept for reference.
 """
 
 import argparse
@@ -29,9 +32,12 @@ import sys
 
 import cv2
 
-_HERE = os.path.dirname(os.path.abspath(__file__))
-_PROJ = os.path.dirname(_HERE)
+# Archived in route_artifacts_poc/archive/: route_artifacts.py is one level up,
+# the project dir (hud_reader, data/, configs/) two levels up.
+_POC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_PROJ = os.path.dirname(_POC)
 sys.path.insert(0, _PROJ)   # so we can import the pipeline's hud_reader
+sys.path.insert(0, _POC)    # ... and route_artifacts
 
 import hud_reader                                    # noqa: E402
 from route_artifacts import ArtifactDiscoverer, ArtifactStore  # noqa: E402

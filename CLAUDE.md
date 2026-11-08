@@ -42,6 +42,40 @@ and degrades gracefully (no audio device / no gamepad → safe no-op).
 - **async_persistent_artifacts_demo.py** + `route_artifacts_poc/`: record a
   voice memory / drop a trinket pinned to a position; it persists to disk; a
   later lap hears it on pass-by (fades in on approach, out once past).
+  LEAVE = `demo_leave_message.py` (pad A / SPACE = record 5 s, buttons 1/2/3 =
+  trinket, global ESC = quit); HEAR = `demo_audio_memories.py`. Both share
+  `output/audio_memories_store.json`. Old brookline-north POCs are in
+  `route_artifacts_poc/archive/` (not used by the rig).
+
+## Eye-tracking (gaze) study branches
+Study builds live on branches; **`main` stays untouched** until the study is done.
+- **`stripped-overlay-gaze-study`** — audio tour with the random "Photo spot"
+  pop-ups AND the "Landmark ahead: Ruggles" banner removed (Ruggles AUDIO still
+  plays at 400/500 m). Every remaining visual is tied to a fixed route position
+  (welcome, Emma ~87 m, Curry sign 675–720 m, status chip) — nothing appears at
+  a random time, so gaze data lines up with route position.
+- **`human-audio-msg-gaze-study`** (branched from the above) — human voice
+  messages:
+  - `demo_leave_message.py` now has the tour's PRERIDE/RIDING/PAUSED/IDLE
+    state machine (same `PRERIDE_BOX`/`PAUSE_BOX` — recalibrate BOTH scripts
+    together); presses accepted ONLY in RIDING; position cleared on
+    PRERIDE/IDLE (no pinning at a stale spot); red click-through
+    "● RECORDING Ns" countdown; overlapping record presses refused.
+  - `demo_audio_memories.py` plays human clips from **`demo_voices/`** (project
+    root), placed by FILE NAME (`300m_alice_caption.mp3`, `1.05km_…`, bare
+    number = metres, no prefix = spaced evenly) — read fresh each run, NOT
+    copied into the store — merged with rider recordings from the store. The old
+    generated placeholder tones are gone. (This standalone HEAR script still
+    has no pause/idle handling or per-lap replay; the combined script does.)
+  - **`gaze_audio_messages_demo.py`** (root) — THE study script: record + hear
+    in one loop. Plays ONLY `demo_voices/` clips (decision: participants'
+    own recordings are saved, never played back). Ducks playback on record and
+    holds clips reached mid-recording; re-arms clips each lap (valid distance
+    wraps to ~0) and on PRERIDE; RIDING-only playback/recording; CSV event log
+    in `output/gaze_logs/` (`unix_time` = eye-tracker sync column). Pure logic
+    (`ClipScheduler`, `is_new_lap`) tested in `test_gaze_audio_messages.py`.
+    Open design input (visual on playback; free vs prompted recording):
+    `docs/gaze-study-audio-messages.md`.
 
 ## Gotchas (hard-won, evidence-based — a debug script confirmed each)
 - Grayscale via `np.max(B,G,R)`, not `cvtColor` (preserves color-tinted text).
@@ -69,6 +103,9 @@ instead of OCR.
 - Wire route-artifacts discovery + a **ghost-rider** (a MOVING anchor on the same
   audio engine) to a live stream.
 - **2 synced riders** (Option C: `gap = A_distance − B_distance`).
+- **Gaze study**: decide items 5 (visual on playback) and 8 (free vs prompted
+  recording) in `docs/gaze-study-audio-messages.md`, then build them into
+  `gaze_audio_messages_demo.py`; validate it live on the rig.
 
 See `docs/` for the calibration profile and feature designs, and `README.md` for
 setup + the file map.

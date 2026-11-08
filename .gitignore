@@ -14,3 +14,9 @@ data/training/*.mov
 # stray local screen-recordings dropped at the repo root
 /*.mp4
 /*.mov
+
+# demo_voices/ is SHARED test data for the gaze study -- always tracked, so
+# anyone who pulls can run the playback. Keep this LAST so no pattern above
+# (or a future *.mp3 / *.wav rule) can hide it. Keep clips small (<100 MB each).
+!demo_voices/
+!demo_voices/**

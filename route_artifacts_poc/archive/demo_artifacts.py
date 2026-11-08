@@ -21,20 +21,26 @@ claim, demonstrated rather than asserted.
 Usage:
     # generate a position stream first (any stream_hud run works):
     python stream_hud.py --video data/training/trimmed-video.mp4 --end-time 59 --fps 1 --out run.jsonl
-    python demo_artifacts.py --reset          # clean run of all 3 sessions
+    python route_artifacts_poc/archive/demo_artifacts.py --reset   # clean run of all 3 sessions
+
+ARCHIVED: an early text-only POC on the brookline-north route; not used by the
+live rig. Kept for reference.
 """
 
 import argparse
 import json
 import os
+import sys
 
-from route_artifacts import ArtifactDiscoverer, ArtifactStore
+# Archived in route_artifacts_poc/archive/: route_artifacts.py is one level up,
+# the project dir two levels up. Anchor both so it runs the same from anywhere.
+_POC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_PROJ = os.path.dirname(_POC)
+sys.path.insert(0, _POC)
+
+from route_artifacts import ArtifactDiscoverer, ArtifactStore  # noqa: E402
 
 ROUTE_ID = "brookline-north"
-
-# This POC lives in a subfolder; anchor default data paths to the project dir
-# (its parent) so the script runs the same from anywhere.
-_PROJ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def load_positions(stream_path: str):
