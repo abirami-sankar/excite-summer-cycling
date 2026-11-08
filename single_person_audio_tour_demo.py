@@ -26,8 +26,9 @@ Stripped for the eye-tracking study: the random "Photo spot" pop-up alerts are
 removed, so every on-screen element is tied to a fixed route position.
 
 Audio (audio_bed): 4 background loops layer + fade at random as a QUIET bed all
-ride; a "Ruggles approaching" clip plays at 400 m (banner -> "Landmark ahead:
-Ruggles (100m)") and "Ruggles unlocked" at 500 m; retro arcade music fades IN
+ride; a "Ruggles approaching" clip plays at 400 m (audio only -- the "Landmark
+ahead: Ruggles" banner is removed for the gaze study) and "Ruggles unlocked" at
+500 m; retro arcade music fades IN
 at 675 m with a "Curry Student Center: After Hours concert" sign and OUT at
 720 m. Re-armed on each new ride; with --retrigger, each beat also re-arms
 whenever you loop back below its trigger, so the fades replay every lap.
@@ -69,8 +70,8 @@ BG_CLIPS = [os.path.join(EXP_DIR, f"Background sound {i}.mp3") for i in (1, 2, 3
 RUGGLES_APPROACH = os.path.join(EXP_DIR, "Ruggles Station - approaching.mp3")
 RUGGLES_UNLOCKED = os.path.join(EXP_DIR, "Ruggles Station - unlocked and continued story.mp3")
 
-RUGGLES_APPROACH_M = 400.0   # play "approaching" + show "Ruggles (100m)" banner
-RUGGLES_UNLOCK_M = 500.0     # play "unlocked and continued story", clear banner
+RUGGLES_APPROACH_M = 400.0   # play "approaching" (audio only -- no banner)
+RUGGLES_UNLOCK_M = 500.0     # play "unlocked and continued story"
 
 CURRY_MUSIC = os.path.join(EXP_DIR, "mondamusic-retro-arcade-game-music-512837.mp3")
 CURRY_SIGN = "Curry Student Center: After Hours concert"
@@ -186,7 +187,6 @@ def main():
         st.update(emma_fired=False, emma_clear_at=None,
                   welcome_done=False, welcome_until=None,
                   ruggles_approach_fired=False, ruggles_unlock_fired=False,
-                  ruggles_banner_active=False,
                   curry_started=False, curry_done=False, curry_active=False,
                   bg_on=False, bg_active=set(), bg_next_change_at=0.0)
     rearm()
@@ -248,15 +248,12 @@ def main():
                 # experience audio: the Ruggles beats (validated distance, once each)
                 if valid and last_pos is not None:
                     if not st["ruggles_approach_fired"] and last_pos >= RUGGLES_APPROACH_M:
-                        bed.play("ruggles", RUGGLES_APPROACH, fade_ms=300)
-                        ov.clear_transient()
-                        ov.show_banner("Landmark ahead: Ruggles (100m)")
-                        st.update(ruggles_approach_fired=True, ruggles_banner_active=True)
+                        bed.play("ruggles", RUGGLES_APPROACH, fade_ms=300)   # audio only
+                        st["ruggles_approach_fired"] = True
                         print(">>> Ruggles approaching (400 m)", flush=True)
                     if not st["ruggles_unlock_fired"] and last_pos >= RUGGLES_UNLOCK_M:
                         bed.play("ruggles", RUGGLES_UNLOCKED, fade_ms=300)
-                        ov.clear_transient()
-                        st.update(ruggles_unlock_fired=True, ruggles_banner_active=False)
+                        st["ruggles_unlock_fired"] = True
                         print(">>> Ruggles unlocked (500 m)", flush=True)
                     if not st["curry_started"] and last_pos >= CURRY_IN_M:
                         bed.play("curry", CURRY_MUSIC, loop=True,
@@ -281,7 +278,7 @@ def main():
                             st["emma_fired"] = False
                         if (st["ruggles_approach_fired"]
                                 and last_pos < RUGGLES_APPROACH_M - REARM_MARGIN_M):
-                            st.update(ruggles_approach_fired=False, ruggles_banner_active=False)
+                            st["ruggles_approach_fired"] = False
                         if (st["ruggles_unlock_fired"]
                                 and last_pos < RUGGLES_UNLOCK_M - REARM_MARGIN_M):
                             st["ruggles_unlock_fired"] = False
