@@ -48,7 +48,24 @@ and degrades gracefully (no audio device / no gamepad → safe no-op).
   `route_artifacts_poc/archive/` (not used by the rig).
 
 ## Eye-tracking (gaze) study branches
-Study builds live on branches; **`main` stays untouched** until the study is done.
+Study builds live on branches; **`main` stays untouched** (still `9f8d4d4
+Initial commit`) until the study is done — never commit/merge to it without an
+explicit ask. Both branches are pushed to `origin` with upstream tracking.
+
+```
+main (9f8d4d4) ── stripped-overlay-gaze-study ── human-audio-msg-gaze-study
+                  (tour visuals stripped)        (branched FROM stripped; adds
+                                                  voice messages + study script)
+```
+- **Workflow**: tour-visual changes → commit on `stripped-overlay-gaze-study`,
+  then `git checkout human-audio-msg-gaze-study && git merge
+  stripped-overlay-gaze-study` so the voice branch inherits them. Voice/study
+  changes → `human-audio-msg-gaze-study` only. This CLAUDE.md is kept identical
+  on both branches.
+- **Status (Nov 2026)**: all code is unit-tested + desk-simulated ONLY — nothing
+  from either branch has been run on the rig with Rouvy, the Xbox pad, or the
+  real mic yet. `demo_voices/` holds only its README (no clips yet).
+
 - **`stripped-overlay-gaze-study`** — audio tour with the random "Photo spot"
   pop-ups AND the "Landmark ahead: Ruggles" banner removed (Ruggles AUDIO still
   plays at 400/500 m). Every remaining visual is tied to a fixed route position
@@ -75,7 +92,26 @@ Study builds live on branches; **`main` stays untouched** until the study is don
     in `output/gaze_logs/` (`unix_time` = eye-tracker sync column). Pure logic
     (`ClipScheduler`, `is_new_lap`) tested in `test_gaze_audio_messages.py`.
     Open design input (visual on playback; free vs prompted recording):
-    `docs/gaze-study-audio-messages.md`.
+    `docs/gaze-study-audio-messages.md`. Trinket buttons are ignored here
+    (record only). Recordings index to `output/gaze_recordings_store.json`
+    (separate from the older demos' `audio_memories_store.json`).
+    Run: `python gaze_audio_messages_demo.py --live --region 1920,0,1920,1080
+    --device "<mic>" --rider P01` (desk: `--simulate`, SPACE = record).
+  - **`demo_voices/` is tracked on purpose** (shared test data anyone can pull):
+    `.gitignore` ends with `!demo_voices/` + `!demo_voices/**` — keep those
+    LAST. Keep clips small (GitHub rejects files >100 MB).
+
+### Gaze study — next steps (in order)
+1. Add the human voice clips to `demo_voices/` (name = position, see its
+   README), commit + push on `human-audio-msg-gaze-study`.
+2. Rig validation of `gaze_audio_messages_demo.py`: `mic_check.py` first;
+   confirm the Xbox pad's A = button 0 (`probe_input.py`); check the
+   PRERIDE/PAUSE boxes still match the Rouvy window; ride ≥2 laps and confirm
+   per-lap replay + a sane CSV log (0-byte `record_end` = mic problem).
+3. Team decides items 5 + 8 in `docs/gaze-study-audio-messages.md`, then build
+   them into the study script.
+4. Known limit: on SPEAKERS a clip starting right after a recording can bleed
+   into the mic if ffmpeg is slow to release it — recommend headphones.
 
 ## Gotchas (hard-won, evidence-based — a debug script confirmed each)
 - Grayscale via `np.max(B,G,R)`, not `cvtColor` (preserves color-tinted text).
@@ -90,6 +126,9 @@ Study builds live on branches; **`main` stays untouched** until the study is don
 - Recording: WAIT for the background ffmpeg to finish before exit or the file is
   never written; run `mic_check.py` first (a silent file = wrong device or a
   Windows desktop-app mic-privacy block).
+- Git from PowerShell 5.1: a commit message containing double quotes in a
+  `-m @'…'@` here-string gets split into pathspecs → write the message to a
+  file and use `git commit -F <file>`.
 
 ## Rejected (don't re-suggest without new info)
 Scraping Rouvy's app/network (ToS, fragile); reading other riders' ANT+/BLE
@@ -103,9 +142,7 @@ instead of OCR.
 - Wire route-artifacts discovery + a **ghost-rider** (a MOVING anchor on the same
   audio engine) to a live stream.
 - **2 synced riders** (Option C: `gap = A_distance − B_distance`).
-- **Gaze study**: decide items 5 (visual on playback) and 8 (free vs prompted
-  recording) in `docs/gaze-study-audio-messages.md`, then build them into
-  `gaze_audio_messages_demo.py`; validate it live on the rig.
+- **Gaze study**: see "Gaze study — next steps" above.
 
 See `docs/` for the calibration profile and feature designs, and `README.md` for
 setup + the file map.
